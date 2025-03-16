@@ -1,19 +1,18 @@
 from fastapi import APIRouter, HTTPException, Query
 
-from schemas.email import EmailSummary
-from services.email_service import EmailFetchError, GmailClient
+from services.email import create_gmail_service, fetch_emails
+from utils.parsing import EmailData
 
 router = APIRouter(tags=["Gmail"])
 
 
-@router.get("/emails", response_model=list[EmailSummary])
-async def get_recent_emails(
-    max_results: int = Query(
-        default=5, ge=1, le=20, description="Number of emails to fetch"
-    ),
-):
-    """Fetch recent emails with metadata and body content"""
-    try:
-        return GmailClient().fetch_emails(max_results)
-    except EmailFetchError as e:
-        raise HTTPException(status_code=503, detail=f"Email service unavailable: {e!s}")
+@router.get("/emails", response_model=list[EmailData])
+def get_emails(max_results: int = Query(default=5, ge=1, le=20)):
+    """Endpoint composed from pure functions"""
+    service = create_gmail_service()
+    emails, error = fetch_emails(service, max_results)
+
+    if error:
+        raise HTTPException(status_code=503, detail=f"Gmail service error: {error!s}")
+
+    return emails
