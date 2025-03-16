@@ -1,3 +1,4 @@
+import base64
 import os
 
 from google.auth.transport.requests import Request
@@ -29,6 +30,67 @@ class GmailService:
             with open("env/token.json", "w") as token:
                 token.write(creds.to_json())
         return creds
+
+    def fetch_emails(self, max_results: int = 10) -> list[dict]:
+        try:
+            # Fetch email IDs
+            results = (
+                self.service.users()
+                .messages()
+                .list(userId="me", maxResults=max_results)
+                .execute()
+            )
+            messages = results.get("messages", [])
+
+            emails = []
+            for msg in messages:
+                # Fetch full email data
+                email_data = (
+                    self.service.users()
+                    .messages()
+                    .get(userId="me", id=msg["id"], format="full")
+                    .execute()
+                )
+                payload = email_data.get("payload", {})
+                headers = payload.get("headers", [])
+                parts = payload.get("parts", [])
+
+                # Extract metadata
+                sender = next(
+                    (h["value"] for h in headers if h["name"] == "From"), "N/A"
+                )
+                subject = next(
+                    (h["value"] for h in headers if h["name"] == "Subject"), "N/A"
+                )
+                date = next((h["value"] for h in headers if h["name"] == "Date"), "N/A")
+
+                # Extract body (plain & HTML)
+                body_plain = ""
+                body_html = ""
+                for part in parts:
+                    if part["mimeType"] == "text/plain":
+                        body_plain = base64.urlsafe_b64decode(
+                            part["body"]["data"].encode("ASCII")
+                        ).decode("utf-8")
+                    elif part["mimeType"] == "text/html":
+                        body_html = base64.urlsafe_b64decode(
+                            part["body"]["data"].encode("ASCII")
+                        ).decode("utf-8")
+
+                emails.append(
+                    {
+                        "sender": sender,
+                        "subject": subject,
+                        "date": date,
+                        "body_plain": body_plain,
+                        "body_html": body_html,
+                    }
+                )
+
+            return emails
+
+        except HttpError as error:
+            raise Exception(f"Gmail API error: {error}") from error
 
     def fetch_labels(self):
         try:
