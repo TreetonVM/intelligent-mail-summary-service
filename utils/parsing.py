@@ -27,7 +27,9 @@ def parse_email(raw: dict) -> EmailData:
 
 def extract_header(headers: list[dict], name: str) -> str:
     """Pure header extraction"""
-    return next((h["value"] for h in headers if h["name"] == name), "N/A")
+    return next(
+        (header["value"] for header in headers if header["name"] == name), "N/A"
+    )
 
 
 def extract_body(parts: list[dict], mime_type: str) -> str:
