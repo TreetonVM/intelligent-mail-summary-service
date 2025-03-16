@@ -1,6 +1,6 @@
-def main():
-    print("Hello from intelligent-mail-summary-service!")
+from fastapi import FastAPI
 
+from routes import email
 
-if __name__ == "__main__":
-    main()
+app = FastAPI()
+app.include_router(email.router)
