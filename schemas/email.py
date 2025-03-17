@@ -1,9 +1,9 @@
 from typing import ClassVar
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
-class EmailSummary(BaseModel):
+class Email(BaseModel):
     sender: str
     subject: str
     date: str
@@ -27,4 +27,3 @@ class SummarizedEmail(BaseModel):
     subject: str
     date: str
     summary: str
-    body_preview: str = Field(..., alias="body_plain")

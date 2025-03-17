@@ -11,7 +11,6 @@ def create_gmail_service():
 
 
 def fetch_email_metadata(service, max_results=10):
-    """Fetch list of email message IDs"""
     try:
         result = (
             service.users()
@@ -24,13 +23,12 @@ def fetch_email_metadata(service, max_results=10):
         raise Exception(f"Gmail API error: {error}") from error
 
 
-def get_email_details(service, message_id):
-    """Get full email details by message ID"""
+def get_email_details(service, email_id):
     try:
         return (
             service.users()
             .messages()
-            .get(userId="me", id=message_id, format="full")
+            .get(userId="me", id=email_id, format="full")
             .execute()
         )
     except HttpError as error:
@@ -38,12 +36,12 @@ def get_email_details(service, message_id):
 
 
 def parse_email_headers(headers, target):
-    """Extract specific header from email headers"""
-    return next((h["value"] for h in headers if h["name"] == target), "N/A")
+    return next(
+        (header["value"] for header in headers if header["name"] == target), "N/A"
+    )
 
 
 def decode_email_body(part):
-    """Decode base64 encoded email body"""
     return base64.urlsafe_b64decode(part["body"]["data"]).decode("utf-8")
 
 
