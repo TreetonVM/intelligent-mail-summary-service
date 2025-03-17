@@ -3,7 +3,7 @@ from typing import ClassVar
 from pydantic import BaseModel
 
 
-class EmailSummary(BaseModel):
+class Email(BaseModel):
     sender: str
     subject: str
     date: str
@@ -20,3 +20,10 @@ class EmailSummary(BaseModel):
                 "body_html": "<p>Please confirm your attendance...</p>",
             }
         }
+
+
+class SummarizedEmail(BaseModel):
+    sender: str
+    subject: str
+    date: str
+    summary: str
