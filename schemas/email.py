@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class EmailSummary(BaseModel):
@@ -20,3 +20,11 @@ class EmailSummary(BaseModel):
                 "body_html": "<p>Please confirm your attendance...</p>",
             }
         }
+
+
+class SummarizedEmail(BaseModel):
+    sender: str
+    subject: str
+    date: str
+    summary: str
+    body_preview: str = Field(..., alias="body_plain")
