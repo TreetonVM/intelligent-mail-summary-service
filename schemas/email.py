@@ -3,7 +3,7 @@ from typing import ClassVar
 from pydantic import BaseModel
 
 
-class Email(BaseModel):
+class OriginalEmail(BaseModel):
     sender: str
     subject: str
     date: str
