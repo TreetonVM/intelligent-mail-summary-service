@@ -1,13 +1,10 @@
-from pathlib import Path
 from typing import cast
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-CREDENTIALS_PATH = Path("env/client_secret.json")
-TOKEN_PATH = Path("env/token.json")
+from config.gmail import user_gmail
 
 
 def ensure_credentials() -> Credentials:
@@ -21,8 +18,10 @@ def ensure_credentials() -> Credentials:
 
 
 def load_existing_credentials() -> Credentials | None:
-    if TOKEN_PATH.exists():
-        return Credentials.from_authorized_user_file(TOKEN_PATH, SCOPES)
+    if user_gmail.TOKEN.exists():
+        return Credentials.from_authorized_user_file(
+            user_gmail.TOKEN, user_gmail.SCOPES
+        )
     return None
 
 
@@ -43,11 +42,13 @@ def refresh_credentials(creds: Credentials) -> Credentials:
 
 
 def create_new_credentials() -> Credentials:
-    flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_PATH, SCOPES)
+    flow = InstalledAppFlow.from_client_secrets_file(
+        user_gmail.CLIENT_SECRET, user_gmail.SCOPES
+    )
     return cast(Credentials, flow.run_local_server(port=0))
 
 
 def save_credentials(creds: Credentials) -> None:
-    TOKEN_PATH.parent.mkdir(exist_ok=True)
-    with TOKEN_PATH.open("w") as token:
+    user_gmail.TOKEN.parent.mkdir(exist_ok=True)
+    with user_gmail.TOKEN.open("w") as token:
         token.write(creds.to_json())
