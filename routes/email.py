@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, Query
 
 from schemas.email import Email, SummarizedEmail
-from services.email_service import (
+from services.gmail.client import (
     create_gmail_service,
     fetch_email_metadata,
     get_email_details,
     parse_email_headers,
     process_email_parts,
 )
-from services.llm import create_summarizer, summarize_email
+from services.llm.llm import create_summarizer, summarize_email
 
 router = APIRouter(tags=["Gmail"])
 

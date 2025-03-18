@@ -3,7 +3,7 @@ import base64
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from services.gmail_auth import ensure_credentials
+from services.gmail.auth import ensure_credentials
 
 
 def create_gmail_service():
