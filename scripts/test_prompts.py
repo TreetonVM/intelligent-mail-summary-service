@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from services.llm.summary import create_summarizer, summarize_email
-from utils.logs.logger import configure_root_logger, get_logger
+from utils.logger.logger import configure_root_logger, get_logger
 
 configure_root_logger()
 logger = get_logger("init_ollama")
