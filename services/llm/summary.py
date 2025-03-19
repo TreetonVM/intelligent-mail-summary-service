@@ -1,7 +1,7 @@
 from langchain_ollama.llms import OllamaLLM
 
 from config.llm import mistral
-from utils.security import sanitize_email_body
+from utils.email.security import sanitize_email_body
 
 from .prompts import EMAIL_SUMMARY_PROMPT
 
