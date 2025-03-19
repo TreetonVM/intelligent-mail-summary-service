@@ -20,3 +20,10 @@ class OriginalEmail(BaseModel):
                 "body_html": "<p>Please confirm your attendance...</p>",
             }
         }
+
+
+class SummarizedEmail(BaseModel):
+    sender: str
+    subject: str
+    date: str
+    summary: str
