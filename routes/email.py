@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 
-from schemas.email import OriginalEmail
 from schemas.email_summary import EmailSummary
+from schemas.original_email import OriginalEmail
 from services.gmail.inbox import (
     create_gmail_service,
     fetch_email_details,
@@ -49,11 +49,10 @@ def get_emails(
         ) from exc
 
 
-summarizer = create_summarizer()
-
-
 @router.get("/emails/summarized", response_model=list[EmailSummary])
 def get_summarized_emails(max_results: int = 3):
+    summarizer = create_summarizer()
+
     try:
         emails = get_emails(max_results)
         return [
