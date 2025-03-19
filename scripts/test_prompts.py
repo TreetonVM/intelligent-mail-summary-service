@@ -1,6 +1,9 @@
 import os
 import sys
 
+# Add the parent directory to the Python path
+# This allows importing modules from the parent directory (project root)
+# which is necessary to import modules when running this script directly
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from services.llm.summary import create_summarizer, summarize_email
@@ -11,7 +14,6 @@ logger = get_logger("init_ollama")
 
 
 def test_prompt(email_body: str, style: str = "default") -> None:
-    """Test different prompting strategies"""
     summarizer = create_summarizer()
     logger.info(f"Testing prompt style: {style}")
     logger.info(f"Input:\n{email_body}\n")
@@ -33,9 +35,7 @@ def load_sample_email() -> str:
 
 
 if __name__ == "__main__":
-    # Get input from command line or use sample
     email_content = sys.argv[1] if len(sys.argv) > 1 else load_sample_email()
 
-    # Test different styles
     test_prompt(email_content, "default")
     test_prompt(email_content, "technical")

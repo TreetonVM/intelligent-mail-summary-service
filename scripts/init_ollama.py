@@ -2,6 +2,9 @@ import os
 import subprocess
 import sys
 
+# Add the parent directory to the Python path
+# This allows importing modules from the parent directory (project root)
+# which is necessary to import modules when running this script directly
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from utils.logger.logger import configure_root_logger, get_logger
@@ -11,7 +14,6 @@ logger = get_logger("init_ollama")
 
 
 def check_ollama_installed() -> bool:
-    """Verify Ollama is available in system PATH"""
     try:
         subprocess.run(
             ["ollama", "--version"],
@@ -26,7 +28,6 @@ def check_ollama_installed() -> bool:
 
 
 def ensure_model_available(model_name: str = "mistral") -> bool:
-    """Check if required model is downloaded"""
     try:
         result = subprocess.run(
             ["ollama", "list"], capture_output=True, text=True, check=True
@@ -38,7 +39,6 @@ def ensure_model_available(model_name: str = "mistral") -> bool:
 
 
 def pull_model(model_name: str) -> None:
-    """Download specified model"""
     try:
         logger.info(f"Downloading {model_name} model...")
         subprocess.run(["ollama", "pull", model_name], check=True)
