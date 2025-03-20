@@ -1,6 +1,6 @@
 # Email Summary API
 
-**AI-powered email summaries from your Gmail** FastAPI + Ollama (Mistral) + Gmail API
+**AI-powered email summaries** FastAPI + Ollama (Mistral) + Gmail API
 
 ## ⚡ Quick Start
 
